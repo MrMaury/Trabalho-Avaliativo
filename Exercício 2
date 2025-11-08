@@ -1,0 +1,86 @@
+# -------------------------------------------------------------
+# AUTOR: Maurícyo Comarú da Silva de Mello
+# DISCIPLINA: Estrutura de Dados
+# EXERCÍCIO 2 - Verificar se uma lista duplamente encadeada é palíndromo
+# -------------------------------------------------------------
+# OBJETIVO:
+# Implementar um método palindromo() que verifica se os valores da
+# lista formam a mesma sequência da esquerda para a direita e da
+# direita para a esquerda.
+# -------------------------------------------------------------
+
+# Classe que representa um nó da lista duplamente encadeada
+class No:
+    def __init__(self, dado):
+        self.dado = dado       # Valor armazenado no nó
+        self.prox = None       # Ponteiro para o próximo nó
+        self.ant = None        # Ponteiro para o nó anterior
+
+# Classe da lista duplamente encadeada
+class ListaDupla:
+    def __init__(self):
+        self.inicio = None  # Ponteiro para o primeiro nó
+        self.fim = None     # Ponteiro para o último nó
+
+    # ---------------------------------------------------------
+    # Método para inserir um novo nó no final da lista
+    # ---------------------------------------------------------
+    def inserir(self, valor):
+        novo = No(valor)
+        if self.inicio is None:
+            self.inicio = novo
+            self.fim = novo
+        else:
+            self.fim.prox = novo
+            novo.ant = self.fim
+            self.fim = novo
+
+    # ---------------------------------------------------------
+    # Método para exibir os elementos da lista (para testes)
+    # ---------------------------------------------------------
+    def listar(self):
+        atual = self.inicio
+        while atual:
+            print(atual.dado, end=" <-> " if atual.prox else "")
+            atual = atual.prox
+        print()
+
+    # ---------------------------------------------------------
+    # Método para verificar se a lista é palíndromo
+    # ---------------------------------------------------------
+    def palindromo(self):
+        # Caso especial: lista vazia ou com um só elemento é palíndromo
+        if self.inicio is None or self.inicio == self.fim:
+            return True
+
+        # Ponteiros no início e fim
+        esquerda = self.inicio
+        direita = self.fim
+
+        # Compara os valores de fora para dentro
+        while esquerda != direita and esquerda.ant != direita:
+            if esquerda.dado != direita.dado:
+                return False
+            esquerda = esquerda.prox
+            direita = direita.ant
+
+        return True
+
+if __name__ == "__main__":
+    print("===== TESTE 1: Lista Palíndromo =====")
+    L1 = ListaDupla()
+    L1.inserir(10)
+    L1.inserir(20)
+    L1.inserir(30)
+    L1.inserir(20)
+    L1.inserir(10)
+    L1.listar()
+    print("É palíndromo?" , "Sim" if L1.palindromo() else "Não")
+
+    print("\n===== TESTE 2: Lista NÃO Palíndromo =====")
+    L2 = ListaDupla()
+    L2.inserir(5)
+    L2.inserir(10)
+    L2.inserir(15)
+    L2.listar()
+    print("É palíndromo?" , "Sim" if L2.palindromo() else "Não")
