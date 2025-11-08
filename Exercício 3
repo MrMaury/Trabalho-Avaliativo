@@ -1,0 +1,85 @@
+# -------------------------------------------------------------
+# AUTOR: Maurícyo Comarú da Silva de Mello
+# DISCIPLINA: Estrutura de Dados
+# EXERCÍCIO 3 - Concatenar duas listas duplamente encadeadas
+# -------------------------------------------------------------
+# OBJETIVO:
+# Implementar um método concatenar(lista2) que une o conteúdo
+# de lista2 ao final da lista atual, sem criar novos nós.
+# Apenas os ponteiros são ajustados.
+# -------------------------------------------------------------
+
+# Classe que representa um nó da lista duplamente encadeada
+class No:
+    def __init__(self, dado):
+        self.dado = dado       # Valor armazenado no nó
+        self.prox = None       # Ponteiro para o próximo nó
+        self.ant = None        # Ponteiro para o nó anterior
+
+# Classe da lista duplamente encadeada
+class ListaDupla:
+    def __init__(self):
+        self.inicio = None  # Ponteiro para o primeiro nó
+        self.fim = None     # Ponteiro para o último nó
+
+    # ---------------------------------------------------------
+    # Método para inserir um novo nó no final da lista
+    # ---------------------------------------------------------
+    def inserir(self, valor):
+        novo = No(valor)
+        if self.inicio is None:
+            self.inicio = novo
+            self.fim = novo
+        else:
+            self.fim.prox = novo
+            novo.ant = self.fim
+            self.fim = novo
+
+    # ---------------------------------------------------------
+    # Método para exibir os elementos da lista (para testes)
+    # ---------------------------------------------------------
+    def listar(self):
+        atual = self.inicio
+        while atual:
+            print(atual.dado, end=" <-> " if atual.prox else "")
+            atual = atual.prox
+        print()
+
+    # ---------------------------------------------------------
+    # Método para concatenar lista2 ao final da lista atual
+    # ---------------------------------------------------------
+    def concatenar(self, lista2):
+        # Caso a primeira lista esteja vazia
+        if self.inicio is None:
+            self.inicio = lista2.inicio
+            self.fim = lista2.fim
+            return
+
+        # Caso a segunda lista esteja vazia
+        if lista2.inicio is None:
+            return
+
+        # Ajusta os ponteiros: fim da primeira -> início da segunda
+        self.fim.prox = lista2.inicio
+        lista2.inicio.ant = self.fim
+
+        # Atualiza o novo fim da lista concatenada
+        self.fim = lista2.fim
+
+if __name__ == "__main__":
+    print("===== LISTA 1 =====")
+    L1 = ListaDupla()
+    L1.inserir(1)
+    L1.inserir(2)
+    L1.inserir(3)
+    L1.listar()
+
+    print("===== LISTA 2 =====")
+    L2 = ListaDupla()
+    L2.inserir(4)
+    L2.inserir(5)
+    L2.listar()
+
+    print("===== LISTA CONCATENADA =====")
+    L1.concatenar(L2)
+    L1.listar()
