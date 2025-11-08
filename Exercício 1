@@ -1,0 +1,130 @@
+# -------------------------------------------------------------
+# AUTOR: Maurícyo Comarú da Silva de Mello
+# DISCIPLINA: Estrutura de Dados
+# EXERCÍCIO 1 - Intercalar duas listas duplamente encadeadas
+# -------------------------------------------------------------
+# OBJETIVO:
+# Implementar uma função que intercale duas listas duplamente
+# encadeadas ordenadas, retornando uma nova lista também ordenada,
+# sem criar novos nós (apenas reconectando os ponteiros existentes).
+# -------------------------------------------------------------
+
+# Classe que representa um nó da lista duplamente encadeada
+class No:
+    def __init__(self, dado):
+        self.dado = dado       # Valor armazenado no nó
+        self.prox = None       # Ponteiro para o próximo nó
+        self.ant = None        # Ponteiro para o nó anterior
+
+# Classe da lista duplamente encadeada
+class ListaDupla:
+    def __init__(self):
+        self.inicio = None  # Ponteiro para o primeiro nó
+        self.fim = None     # Ponteiro para o último nó
+
+    # -----------------------------------------
+    # Método para inserir um novo nó no final
+    # -----------------------------------------
+    def inserir(self, valor):
+        novo = No(valor)
+        if self.inicio is None:
+            self.inicio = novo
+            self.fim = novo
+        else:
+            self.fim.prox = novo
+            novo.ant = self.fim
+            self.fim = novo
+
+    # -----------------------------------------
+    # Método para exibir a lista (para testes)
+    # -----------------------------------------
+    def listar(self):
+        atual = self.inicio
+        while atual:
+            print(atual.dado, end=" <-> " if atual.prox else "")
+            atual = atual.prox
+        print()
+
+# -------------------------------------------------------------
+# FUNÇÃO INTERCALAR
+# -------------------------------------------------------------
+# Recebe duas listas duplamente encadeadas ORDENADAS
+# e retorna uma nova lista ordenada, sem criar novos nós.
+# -------------------------------------------------------------
+def intercalar(lista1, lista2):
+    # Posições de início em cada lista
+    p1 = lista1.inicio
+    p2 = lista2.inicio
+
+    # Criação de uma nova lista (sem novos nós)
+    resultado = ListaDupla()
+
+    # Enquanto ainda existirem nós em uma das listas
+    while p1 and p2:
+        if p1.dado <= p2.dado:
+            # Remove o nó de lista1 e adiciona ao resultado
+            proximo = p1.prox
+            p1.ant = resultado.fim
+            if resultado.fim:
+                resultado.fim.prox = p1
+            else:
+                resultado.inicio = p1
+            resultado.fim = p1
+            p1.prox = None
+            p1 = proximo
+        else:
+            # Remove o nó de lista2 e adiciona ao resultado
+            proximo = p2.prox
+            p2.ant = resultado.fim
+            if resultado.fim:
+                resultado.fim.prox = p2
+            else:
+                resultado.inicio = p2
+            resultado.fim = p2
+            p2.prox = None
+            p2 = proximo
+
+    # Liga o restante da lista1, se existir
+    while p1:
+        proximo = p1.prox
+        p1.ant = resultado.fim
+        if resultado.fim:
+            resultado.fim.prox = p1
+        else:
+            resultado.inicio = p1
+        resultado.fim = p1
+        p1.prox = None
+        p1 = proximo
+
+    # Liga o restante da lista2, se existir
+    while p2:
+        proximo = p2.prox
+        p2.ant = resultado.fim
+        if resultado.fim:
+            resultado.fim.prox = p2
+        else:
+            resultado.inicio = p2
+        resultado.fim = p2
+        p2.prox = None
+        p2 = proximo
+
+    return resultado
+
+if __name__ == "__main__":
+    print("===== LISTA 1 =====")
+    L1 = ListaDupla()
+    L1.inserir(1)
+    L1.inserir(3)
+    L1.inserir(5)
+    L1.listar()
+
+    print("===== LISTA 2 =====")
+    L2 = ListaDupla()
+    L2.inserir(2)
+    L2.inserir(4)
+    L2.inserir(6)
+    L2.listar()
+
+    print("===== LISTA INTERCALADA =====")
+    L3 = intercalar(L1, L2)
+    L3.listar()
